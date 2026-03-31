@@ -1,29 +1,47 @@
 # ClawEasy Landing Page
 
-Clean static landing-page repository for **ClawEasy — Vibe Coding with OpenClaw Claude**.
+Static landing page for **ClawEasy — Vibe Coding with OpenClaw Claude**.
+
+![Preview](assets/images/preview.png)
+
+## Tech
+
+- Pure HTML/CSS/JS (single page)
+- No framework required
 
 ## Project structure
 
 ```text
 .
-├── index.html
+├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   ├── workflows/
+│   ├── CODE_OF_CONDUCT.md
+│   └── pull_request_template.md
 ├── assets/
 │   └── images/
 │       └── preview.png
-├── .gitignore
-└── README.md
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── LICENSE
+├── README.md
+├── SECURITY.md
+└── index.html
 ```
 
 ## Run locally
 
-Open `index.html` in a browser, or run any static server:
-
 ```bash
 python3 -m http.server 8080
-# then open http://localhost:8080
+# open http://localhost:8080
 ```
 
-## Notes
+Or just open `index.html` directly in browser.
 
-- Repository is intentionally framework-free (single-file HTML landing).
-- Local Vercel metadata (`.vercel/`) is excluded from git.
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+[MIT](LICENSE)

@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  local-links-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate local asset links in index.html
+        run: |
+          python3 - << 'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+
+          root = Path('.')
+          html = root / 'index.html'
+          if not html.exists():
+              raise SystemExit('index.html not found')
+
+          refs = []
+          class P(HTMLParser):
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  for key in ('src', 'href'):
+                      val = attrs.get(key)
+                      if not val:
+                          continue
+                      if val.startswith(('http://', 'https://', 'mailto:', 'tel:', '#', 'data:')):
+                          continue
+                      refs.append(val)
+
+          P().feed(html.read_text(encoding='utf-8'))
+
+          missing = []
+          for ref in refs:
+              target = (html.parent / ref).resolve()
+              if not target.exists():
+                  missing.append(ref)
+
+          if missing:
+              print('Missing local references:')
+              for m in missing:
+                  print('-', m)
+              raise SystemExit(1)
+
+          print(f'OK: checked {len(refs)} local refs')
+          PY
