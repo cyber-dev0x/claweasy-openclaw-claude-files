@@ -1,0 +1,2333 @@
+<!DOCTYPE html>
+<!-- saved from url=(0029)https://claweasy.vercel.app/# -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClawEasy — Vibe Coding with OpenClaw Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="./ClawEasy — Vibe Coding with OpenClaw Claude_files/css2" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #050101;
+  --surface: #0c0202;
+  --surface2: #120303;
+  --border: rgba(255,255,255,0.06);
+  --border-red: rgba(180,30,30,0.18);
+  --border2: rgba(255,255,255,0.11);
+  --text: #f0eeec;
+  --text2: #9a9090;
+  --muted: #4a4040;
+  --accent: #7a1515;
+  --accent2: #a81e1e;
+  --accent3: #d44;
+  --accent-light: #e87070;
+  --red-dim: rgba(120,20,20,0.14);
+  --font-serif: 'EB Garamond', Georgia, serif;
+  --font-mono: 'DM Mono', monospace;
+  --font-sans: 'Inter', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ───────────────────────────────────────────
+   GLOBAL BACKGROUND — red ambient blobs
+─────────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 55% 38% at 8% 12%, rgba(140,18,18,0.22) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 28% at 92% 5%,  rgba(100,12,12,0.16) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 78% 55%, rgba(120,16,16,0.14) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 30% at 20% 85%, rgba(100,10,10,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 35% 50% at 50% 50%, rgba(80,8,8,0.08)  0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Fine noise grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  pointer-events: none;
+}
+
+/* All sections stack above bg layer */
+nav, section, .product-grid, .trusted-section,
+.testimonials, .confidence, .features-detail,
+.stats-section, .pricing-section, .faq-section,
+.cta-final, .footer-main, .footer-bottom, .footer-wordmark {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  height: 52px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(3,0,0,0.88);
+  backdrop-filter: blur(14px);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.logo-mark {
+  width: 24px; height: 24px;
+  border: 1.5px solid var(--accent2);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--accent-light);
+}
+
+.nav-center {
+  display: flex;
+  gap: 2px;
+  list-style: none;
+}
+
+.nav-center a {
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: color 0.15s;
+}
+.nav-center a:hover { color: var(--text); }
+
+.nav-right { display: flex; align-items: center; gap: 8px; }
+.nav-right a {
+  font-size: 13px;
+  text-decoration: none;
+  color: var(--text2);
+  padding: 6px 14px;
+  transition: color 0.15s;
+}
+.nav-right a:hover { color: var(--text); }
+
+.btn-demo {
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 7px 18px !important;
+  border: 1px solid rgba(255,255,255,0.22) !important;
+  border-radius: 100px !important;
+  color: var(--text) !important;
+  transition: border-color 0.2s, background 0.2s !important;
+}
+.btn-demo:hover { border-color: var(--accent-light) !important; background: var(--red-dim) !important; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  padding-top: 52px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  overflow: hidden;
+}
+
+/* hero extra glow */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -10%; left: -5%;
+  width: 60%; height: 80%;
+  background: radial-gradient(ellipse at 30% 40%, rgba(160,22,22,0.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-left {
+  padding: 80px 48px 80px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border-red);
+  background: rgba(100,12,12,0.12);
+  color: var(--text2);
+  padding: 5px 14px 5px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-bottom: 40px;
+  width: fit-content;
+}
+
+.badge-tag {
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+}
+
+.hero h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(52px, 5.5vw, 82px);
+  font-weight: 400;
+  line-height: 1.07;
+  letter-spacing: -0.5px;
+  margin-bottom: 28px;
+}
+
+.hero-desc {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.7;
+  max-width: 420px;
+  margin-bottom: 40px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 52px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 11px 26px;
+  border-radius: 100px;
+  background: var(--accent2);
+  border: 1px solid var(--accent2);
+  color: #fff;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+.btn-primary:hover { background: var(--accent3); border-color: var(--accent3); }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 11px 26px;
+  border-radius: 100px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text);
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+.btn-secondary:hover { background: var(--red-dim); border-color: rgba(200,60,60,0.3); }
+
+/* hero stats row */
+.hero-stats {
+  display: flex;
+  gap: 40px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.hstat-num {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1;
+}
+
+.hstat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.hero-right {
+  position: relative;
+  overflow: hidden;
+  border-left: 1px solid var(--border);
+}
+
+/* red glow in hero right */
+.hero-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 60% 40%, rgba(140,18,18,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.ascii-art {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-45%, -50%);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  line-height: 1.35;
+  letter-spacing: 0.08em;
+  color: rgba(180,60,60,0.25);
+  white-space: pre;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* hero terminal */
+.hero-terminal {
+  position: absolute;
+  bottom: 48px;
+  left: 40px;
+  right: 40px;
+  background: rgba(10,2,2,0.85);
+  border: 1px solid var(--border-red);
+  border-radius: 10px;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+
+.ht-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: rgba(20,4,4,0.7);
+  border-bottom: 1px solid var(--border);
+}
+
+.ht-dot { width: 10px; height: 10px; border-radius: 50%; }
+.ht-dot-r { background: #ff5f57; }
+.ht-dot-y { background: #febc2e; }
+.ht-dot-g { background: #28c840; }
+.ht-title {
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.ht-body {
+  padding: 18px 20px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.8;
+}
+
+.ht-prompt { color: var(--accent3); }
+.ht-ok { color: #7dba6e; }
+.ht-dim { color: var(--muted); }
+.ht-cursor {
+  display: inline-block;
+  width: 7px; height: 12px;
+  background: var(--accent-light);
+  vertical-align: middle;
+  animation: blink 1.1s step-end infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ── TICKER BAR ── */
+.ticker-bar {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: rgba(8,1,1,0.6);
+  overflow: hidden;
+  padding: 10px 0;
+  position: relative;
+}
+
+.ticker-bar::before,
+.ticker-bar::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+.ticker-bar::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
+.ticker-bar::after  { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
+
+.ticker-track {
+  display: flex;
+  gap: 0;
+  width: max-content;
+  animation: tick 20s linear infinite;
+}
+@keyframes tick {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 32px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  border-right: 1px solid var(--border);
+}
+
+.ticker-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent2); }
+
+/* ── PRODUCT GRID ── */
+.product-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--border);
+}
+
+.product-card {
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 52px 56px 48px;
+  position: relative;
+  transition: background 0.25s;
+  overflow: hidden;
+}
+
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.product-card:hover { background: rgba(120,14,14,0.07); }
+.product-card:hover::before { opacity: 1; }
+.product-card:nth-child(even) { border-right: none; }
+
+.product-icon {
+  width: 30px; height: 30px;
+  margin-bottom: 22px;
+}
+.product-icon svg { width: 100%; height: 100%; }
+
+.product-card h3 {
+  font-family: var(--font-serif);
+  font-size: 30px;
+  font-weight: 400;
+  margin-bottom: 12px;
+  letter-spacing: -0.2px;
+}
+
+.product-card p {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.65;
+  max-width: 360px;
+}
+
+.learn-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text2);
+  text-decoration: none;
+  margin-top: 52px;
+  transition: color 0.15s;
+}
+.learn-more:hover { color: var(--text); }
+
+/* ── MARQUEE / TRUSTED ── */
+.trusted-section {
+  padding: 72px 48px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  position: relative;
+}
+
+.trusted-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(100,10,10,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.trusted-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 52px;
+}
+
+.logo-row {
+  display: flex;
+  justify-content: center;
+  gap: 56px;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.logo-item {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--text2);
+  opacity: 0.45;
+  transition: opacity 0.2s;
+}
+.logo-item:hover { opacity: 0.8; }
+
+/* ── TESTIMONIALS ── */
+.testimonials {
+  border-top: 1px solid var(--border);
+  overflow: hidden;
+  position: relative;
+}
+
+.testi-fade-l, .testi-fade-r {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 160px;
+  z-index: 2;
+  pointer-events: none;
+}
+.testi-fade-l { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
+.testi-fade-r { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
+
+.testimonials-track {
+  display: flex;
+  width: max-content;
+  animation: tslide 36s linear infinite;
+}
+.testimonials-track:hover { animation-play-state: paused; }
+
+@keyframes tslide {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.tcard {
+  width: 500px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  padding: 52px 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tcard::after {
+  content: '"';
+  position: absolute;
+  top: 20px; right: 32px;
+  font-family: var(--font-serif);
+  font-size: 120px;
+  color: rgba(160,20,20,0.06);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.tcard-logo {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  color: var(--text2);
+  margin-bottom: 28px;
+  opacity: 0.65;
+}
+
+.tcard-quote {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--text);
+  font-weight: 400;
+  margin-bottom: 36px;
+}
+
+.tcard-divider {
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent2), rgba(160,28,28,0.08), transparent);
+  margin-bottom: 22px;
+}
+
+.tcard-author { display: flex; align-items: center; gap: 12px; }
+.tcard-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 1px solid var(--border-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-family: var(--font-serif);
+  color: var(--text2);
+}
+.tcard-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+.tcard-role { font-size: 10px; font-family: var(--font-mono); color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* ── STATS SECTION ── */
+.stats-section {
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 100% at 50% 50%, rgba(110,12,12,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.stat-block {
+  padding: 64px 48px;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+.stat-block:last-child { border-right: none; }
+
+.stat-num {
+  font-family: var(--font-serif);
+  font-size: 60px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.stat-num span {
+  color: var(--accent3);
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.stat-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+/* ── CONFIDENCE ── */
+.confidence {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--border);
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.confidence::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(120,14,14,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.confidence-left { padding: 80px; z-index: 2; position: relative; }
+.confidence-left h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(44px, 4.5vw, 64px);
+  font-weight: 400;
+  line-height: 1.1;
+}
+.confidence-left p {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.7;
+  max-width: 360px;
+  margin-top: 20px;
+}
+
+.confidence-center {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  line-height: 1.28;
+  letter-spacing: 0.04em;
+  color: rgba(180,40,40,0.18);
+  white-space: pre;
+  pointer-events: none;
+  user-select: none;
+}
+
+.confidence-right {
+  padding: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 2;
+  position: relative;
+}
+
+.confidence-right h3 {
+  font-family: var(--font-serif);
+  font-size: clamp(38px, 3.8vw, 56px);
+  font-weight: 400;
+  margin-bottom: 32px;
+  text-align: right;
+}
+
+.conf-btns { display: flex; gap: 10px; }
+
+.conf-btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  border-radius: 100px;
+  border: 1px solid var(--border2);
+  text-decoration: none;
+  transition: all 0.2s;
+  color: var(--text);
+}
+.conf-btn:hover { border-color: var(--accent-light); background: var(--red-dim); }
+.conf-btn.primary { background: var(--accent2); border-color: var(--accent2); color: #fff; }
+.conf-btn.primary:hover { background: var(--accent3); border-color: var(--accent3); }
+
+/* ── FEATURES DETAIL ── */
+.features-detail { border-top: 1px solid var(--border); }
+
+.feature-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+  min-height: 380px;
+}
+
+.feature-content {
+  padding: 72px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid var(--border);
+}
+.feature-content.right-side { border-right: none; border-left: 1px solid var(--border); }
+
+.feature-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+  margin-bottom: 20px;
+}
+
+.feature-content h3 {
+  font-family: var(--font-serif);
+  font-size: 38px;
+  font-weight: 400;
+  line-height: 1.13;
+  margin-bottom: 16px;
+}
+
+.feature-content p {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.72;
+  max-width: 400px;
+  margin-bottom: 16px;
+}
+
+.feature-visual {
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(100,10,10,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.feature-code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.85;
+  color: var(--text2);
+  padding: 44px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.fc-comment { color: var(--muted); font-style: italic; }
+.fc-kw { color: #b03030; }
+.fc-str { color: #b07070; }
+.fc-fn { color: #d4a0a0; }
+.fc-var { color: var(--text); }
+
+.feature-terminal {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.9;
+  padding: 44px;
+  width: 100%;
+  color: var(--text2);
+  position: relative;
+  z-index: 1;
+}
+.ft-prompt { color: var(--accent3); }
+.ft-ok { color: #7dba6e; }
+.ft-dim { color: var(--muted); }
+
+/* ── PRICING ── */
+.pricing-section {
+  border-top: 1px solid var(--border);
+  padding: 100px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pricing-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(120,14,14,0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.section-header {
+  margin-bottom: 64px;
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.section-header h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(40px, 4vw, 60px);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.3px;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.plan {
+  background: var(--surface);
+  padding: 48px 44px;
+  position: relative;
+  transition: background 0.2s;
+}
+.plan:hover { background: rgba(14,3,3,1); }
+
+.plan.featured {
+  background: rgba(20,4,4,0.9);
+  border-top: 2px solid var(--accent2);
+}
+
+.plan-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+  border: 1px solid var(--border-red);
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin-bottom: 24px;
+}
+
+.plan-name {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.plan-price {
+  font-family: var(--font-serif);
+  font-size: 52px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.plan-price sup { font-size: 24px; vertical-align: super; color: var(--text2); }
+.plan-price span { font-size: 16px; color: var(--text2); }
+
+.plan-desc {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+  margin-bottom: 36px;
+}
+
+.plan-divider { height: 1px; background: var(--border); margin-bottom: 28px; }
+
+.plan-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.plan-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.pf-check {
+  color: var(--accent3);
+  font-size: 12px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.plan-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border2);
+  color: var(--text);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.plan-btn:hover { background: var(--red-dim); border-color: rgba(200,40,40,0.3); }
+.plan.featured .plan-btn {
+  background: var(--accent2);
+  border-color: var(--accent2);
+  color: #fff;
+}
+.plan.featured .plan-btn:hover { background: var(--accent3); border-color: var(--accent3); }
+
+/* ── FAQ ── */
+.faq-section {
+  border-top: 1px solid var(--border);
+  padding: 100px 80px;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 80px;
+  margin-top: 64px;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--border);
+  padding: 28px 0;
+}
+
+.faq-item h4 {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.faq-toggle {
+  color: var(--muted);
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.faq-item p {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+/* ── CTA FINAL ── */
+.cta-final {
+  border-top: 1px solid var(--border);
+  padding: 120px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-final::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 30% 50%, rgba(140,18,18,0.1) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 80% at 70% 50%, rgba(100,12,12,0.1) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.cta-final h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(48px, 5vw, 80px);
+  font-weight: 400;
+  line-height: 1.07;
+  letter-spacing: -0.5px;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-final p {
+  font-size: 16px;
+  color: var(--text2);
+  max-width: 480px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── FOOTER ── */
+.footer-main {
+  border-top: 1px solid var(--border);
+  padding: 64px 80px 48px;
+  display: grid;
+  grid-template-columns: 220px 1fr 1fr 1fr 1fr;
+  gap: 40px;
+}
+
+.footer-brand { display: flex; flex-direction: column; gap: 24px; }
+
+.footer-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text2);
+  font-family: var(--font-mono);
+}
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: #7dba6e; }
+
+.footer-col h4 { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 20px; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.footer-col a {
+  font-size: 13px;
+  color: var(--text2);
+  text-decoration: none;
+  transition: color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.footer-col a:hover { color: var(--text); }
+.ext { font-size: 10px; opacity: 0.5; }
+
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding: 20px 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-bottom span { font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
+
+.footer-wordmark {
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+}
+.footer-wordmark-text {
+  font-family: var(--font-serif);
+  font-size: clamp(80px, 13vw, 200px);
+  font-weight: 400;
+  color: rgba(255,255,255,0.028);
+  white-space: nowrap;
+  line-height: 0.88;
+  letter-spacing: -3px;
+  padding: 16px 40px 0;
+  user-select: none;
+}
+
+/* ── RESPONSIVE ── */
+/* ── TWITTER / X BUTTON ── */
+.x-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: 100px;
+  border: 1px solid var(--border-red);
+  background: rgba(100,10,10,0.1);
+  color: var(--text2);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.x-btn:hover {
+  border-color: var(--accent-light);
+  background: rgba(140,18,18,0.2);
+  color: var(--text);
+}
+.x-btn svg { flex-shrink: 0; }
+
+/* floating X badge */
+.x-float {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: 100px;
+  background: rgba(6,1,1,0.92);
+  border: 1px solid var(--border-red);
+  backdrop-filter: blur(16px);
+  text-decoration: none;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  box-shadow: 0 4px 32px rgba(160,18,18,0.25), 0 1px 8px rgba(0,0,0,0.6);
+  transition: all 0.2s;
+  animation: floatIn 0.5s 1s ease both;
+}
+.x-float:hover {
+  border-color: var(--accent-light);
+  background: rgba(12,2,2,0.97);
+  box-shadow: 0 4px 48px rgba(200,30,30,0.35), 0 1px 8px rgba(0,0,0,0.6);
+  transform: translateY(-2px);
+}
+.x-float-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent3);
+  animation: pulse-red 2s infinite;
+}
+@keyframes pulse-red {
+  0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(200,60,60,0.4); }
+  50% { opacity:0.8; box-shadow: 0 0 0 4px rgba(200,60,60,0); }
+}
+@keyframes floatIn {
+  from { opacity:0; transform: translateY(12px); }
+  to { opacity:1; transform: translateY(0); }
+}
+
+/* footer X link */
+.footer-x-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text2);
+  text-decoration: none;
+  transition: color 0.15s;
+  margin-top: 8px;
+}
+.footer-x-link:hover { color: var(--accent-light); }
+
+@media (max-width: 1100px) {
+  .stats-section { grid-template-columns: repeat(2,1fr); }
+  .pricing-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 960px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .product-grid { grid-template-columns: 1fr; }
+  .product-card { border-right: none; }
+  .confidence { grid-template-columns: 1fr; min-height: auto; }
+  .confidence-right { align-items: flex-start; padding-top: 0; }
+  .confidence-right h3 { text-align: left; }
+  .confidence-center { display: none; }
+  .feature-row { grid-template-columns: 1fr; }
+  .faq-grid { grid-template-columns: 1fr; }
+  .footer-main { grid-template-columns: 1fr 1fr; }
+  nav { padding: 0 20px; }
+  .nav-center { display: none; }
+  .hero-left { padding: 60px 28px; }
+  .pricing-section, .faq-section, .cta-final { padding: 60px 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="https://claweasy.vercel.app/#" class="logo">
+    <div class="logo-mark">✦</div>
+    claweasy
+  </a>
+  <ul class="nav-center">
+    <li><a href="https://claweasy.vercel.app/#">Products ◇</a></li>
+    <li><a href="https://claweasy.vercel.app/#">Customers</a></li>
+    <li><a href="https://claweasy.vercel.app/#">Docs ◇</a></li>
+    <li><a href="https://claweasy.vercel.app/#">Company ◇</a></li>
+    <li><a href="https://claweasy.vercel.app/#">Pricing</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="https://x.com/ClawEasyAgent" target="_blank" class="x-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+      @ClawEasyAgent
+    </a>
+    <a href="https://claweasy.vercel.app/#">Log in</a>
+    <a href="https://claweasy.vercel.app/#" class="btn-demo">Book a Demo</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-badge">
+      <span class="badge-tag">NEW</span>
+      Vibe coding is the new software engineering &nbsp;›
+    </div>
+    <h1>Vibe code your app.<br>Engineer your flow.</h1>
+    <p class="hero-desc">
+      ClawEasy is your AI companion for vibe coding — powered by OpenClaw Claude.
+      Describe what you want in plain language and get production-ready code instantly.
+    </p>
+    <div class="hero-actions">
+      <a href="https://claweasy.vercel.app/#" class="btn-primary">Start Vibing →</a>
+      <a href="https://claweasy.vercel.app/#" class="btn-secondary">Read the Docs</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hstat-num">10<span style="color:var(--accent3)">×</span></div>
+        <div class="hstat-label">faster shipping</div>
+      </div>
+      <div>
+        <div class="hstat-num">50<span style="color:var(--accent3)">k+</span></div>
+        <div class="hstat-label">developers</div>
+      </div>
+      <div>
+        <div class="hstat-num">∞</div>
+        <div class="hstat-label">iterations</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="ascii-art">· · · · · · · · · · · · · · · · · · · · · · · ·
+· · · ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ · · · ·
+· · ∨ A A A A A A A A A A A A A A A ∨ · · ·
+· ∨ A A V V V - / V \ / A - • A V V A A ∨ ·
+∨ A A V V - / V \ / A - • A V / \ V A A ∨
+∨ A V V - / V \ / A - • A V / \ - V V A ∨
+A V V / V \ / A - • A V / \ · - V - V V A
+A V / A - • A V / \ · - V - / V \ A V A
+V A • A V / \ · - V - / V \ / A - • V A
+A - • V / \ · - V - / V \ / A - • A V -
+- • A V \ · - V - / V \ / A - • A V / ·
+• A V / · - V - / V \ / A - • A V / \ A
+A V / \ V - / V \ / A - • A V / \ · ∨ A
+∨ A V V / V \ / A - • A V / \ · - V A ∨
+∨ A A V V - / V \ / A - • A V - V V A ∨
+· ∨ A A V V V / V \ / A • V V A A ∨ ·
+· · ∨ A A A A A A A A A A A A A ∨ · ·
+· · · ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ · · ·
+· · · · · · · · · · · · · · · · · · · ·</div>
+
+    <div class="hero-terminal">
+      <div class="ht-bar">
+        <span class="ht-dot ht-dot-r"></span>
+        <span class="ht-dot ht-dot-y"></span>
+        <span class="ht-dot ht-dot-g"></span>
+        <span class="ht-title">claweasy — vibe session</span>
+      </div>
+      <div class="ht-body">
+        <div><span class="ft-prompt">you › </span>dark dashboard with sales chart + date filter</div>
+        <div style="margin-top:8px" class="ft-dim">● analyzing project context...</div>
+        <div><span class="ft-ok">✓</span> component structure scaffolded</div>
+        <div><span class="ft-ok">✓</span> dark theme + responsive layout</div>
+        <div><span class="ft-ok">✓</span> date range picker wired up</div>
+        <div><span class="ft-ok">✓</span> recharts + typescript types</div>
+        <div style="margin-top:8px"><span class="ft-ok">✦ done</span> <span class="ft-dim">— 94 lines · zero extra deps</span></div>
+        <div style="margin-top:6px"><span class="ft-prompt">you › </span><span class="ht-cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER BAR -->
+<div class="ticker-bar">
+  <div class="ticker-track">
+    <span class="ticker-item"><span class="ticker-dot"></span>Natural Language → Code</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Full Project Context</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Vibe-First Interface</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>TypeScript · Python · Go · Rust</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Zero Context Switching</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Powered by OpenClaw Claude</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Instant Iterations</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Production-Ready Output</span>
+    <!-- duplicate -->
+    <span class="ticker-item"><span class="ticker-dot"></span>Natural Language → Code</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Full Project Context</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Vibe-First Interface</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>TypeScript · Python · Go · Rust</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Zero Context Switching</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Powered by OpenClaw Claude</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Instant Iterations</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Production-Ready Output</span>
+  </div>
+</div>
+
+<!-- PRODUCT GRID -->
+<div class="product-grid">
+  <div class="product-card">
+    <div class="product-icon">
+      <svg viewBox="0 0 32 32" fill="none">
+        <rect x="4" y="4" width="11" height="11" stroke="#9a9090" stroke-width="1.5"></rect>
+        <rect x="17" y="4" width="11" height="11" stroke="#9a9090" stroke-width="1.5"></rect>
+        <rect x="4" y="17" width="11" height="11" stroke="#9a9090" stroke-width="1.5"></rect>
+        <rect x="17" y="17" width="11" height="11" stroke="#9a9090" stroke-width="1.5"></rect>
+      </svg>
+    </div>
+    <h3>Generate Code Instantly</h3>
+    <p>Describe what you need in plain language. ClawEasy generates idiomatic, production-ready code in any language or framework — React, Python, Go, Rust and beyond.</p>
+    <a href="https://claweasy.vercel.app/#" class="learn-more">Learn more →</a>
+  </div>
+  <div class="product-card">
+    <div class="product-icon">
+      <svg viewBox="0 0 32 32" fill="none">
+        <path d="M6 27 L16 5 L26 27" stroke="#9a9090" stroke-width="1.5" stroke-linejoin="round"></path>
+        <path d="M10 20 L22 20" stroke="#a81e1e" stroke-width="1" stroke-linecap="round"></path>
+      </svg>
+    </div>
+    <h3>Automate Workflows</h3>
+    <p>We handle the boilerplate so you stay in flow. Powered by OpenClaw Claude's deep contextual reasoning — no copy-paste, no context switching.</p>
+    <a href="https://claweasy.vercel.app/#" class="learn-more">Learn more →</a>
+  </div>
+  <div class="product-card">
+    <div class="product-icon">
+      <svg viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="11" stroke="#9a9090" stroke-width="1.5"></circle>
+        <circle cx="16" cy="16" r="5" stroke="#a81e1e" stroke-width="1"></circle>
+        <line x1="16" y1="1" x2="16" y2="5" stroke="#9a9090" stroke-width="1.5" stroke-linecap="round"></line>
+        <line x1="16" y1="27" x2="16" y2="31" stroke="#9a9090" stroke-width="1.5" stroke-linecap="round"></line>
+        <line x1="1" y1="16" x2="5" y2="16" stroke="#9a9090" stroke-width="1.5" stroke-linecap="round"></line>
+        <line x1="27" y1="16" x2="31" y2="16" stroke="#9a9090" stroke-width="1.5" stroke-linecap="round"></line>
+      </svg>
+    </div>
+    <h3>Vibe-First Interface</h3>
+    <p>Describe feelings, not specs. Say "make it feel fast and minimal" — ClawEasy translates intent into precise, working implementation that matches your vision.</p>
+    <a href="https://claweasy.vercel.app/#" class="learn-more">Learn more →</a>
+  </div>
+  <div class="product-card">
+    <div class="product-icon">
+      <svg viewBox="0 0 32 32" fill="none">
+        <rect x="3" y="8" width="26" height="18" rx="2" stroke="#9a9090" stroke-width="1.5"></rect>
+        <path d="M10 6 L22 6" stroke="#9a9090" stroke-width="1.5" stroke-linecap="round"></path>
+        <path d="M8 14 L14 14" stroke="#a81e1e" stroke-width="1" stroke-linecap="round"></path>
+        <path d="M8 18 L22 18" stroke="#a81e1e" stroke-width="1" stroke-linecap="round"></path>
+        <path d="M8 22 L18 22" stroke="#a81e1e" stroke-width="1" stroke-linecap="round"></path>
+      </svg>
+    </div>
+    <h3>Build AI Experiences</h3>
+    <p>Power your entire product with OpenClaw Claude. Seamless integration across your stack — from prototype to production, with full type safety throughout.</p>
+    <a href="https://claweasy.vercel.app/#" class="learn-more">Learn more ↗</a>
+  </div>
+</div>
+
+<!-- TRUSTED BY -->
+<div class="trusted-section">
+  <p class="trusted-label">Trusted by builders at</p>
+  <div class="logo-row">
+    <span class="logo-item">runway</span>
+    <span class="logo-item">▲ vercel</span>
+    <span class="logo-item">linear</span>
+    <span class="logo-item">resend</span>
+    <span class="logo-item">neon</span>
+  </div>
+  <div class="logo-row">
+    <span class="logo-item">loom →</span>
+    <span class="logo-item">◈ liveblocks</span>
+    <span class="logo-item">✦ mux</span>
+    <span class="logo-item">planetscale</span>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="testimonials">
+  <div class="testi-fade-l"></div>
+  <div class="testi-fade-r"></div>
+  <div class="testimonials-track">
+    <div class="tcard">
+      <div class="tcard-logo">linear</div>
+      <div class="tcard-quote">"ClawEasy completely changed how our team ships features. Describing the vibe is enough — it figures out the rest. Incredible leverage."</div>
+      <div class="tcard-divider"></div>
+      <div class="tcard-author">
+        <div class="tcard-avatar">K</div>
+        <div><div class="tcard-name">Karri Saarinen</div><div class="tcard-role">CEO @ Linear</div></div>
+      </div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-logo">▲ vercel</div>
+      <div class="tcard-quote">"Thanks to ClawEasy, building and iterating on our platform became effortless. OpenClaw Claude understands our entire codebase and intent perfectly."</div>
+      <div class="tcard-divider"></div>
+      <div class="tcard-author">
+        <div class="tcard-avatar">G</div>
+        <div><div class="tcard-name">Guillermo Rauch</div><div class="tcard-role">CEO @ Vercel</div></div>
+      </div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-logo">resend</div>
+      <div class="tcard-quote">"We used ClawEasy to accelerate our TypeScript SDK. The vibe-first approach is a genuine paradigm shift for the way developers build."</div>
+      <div class="tcard-divider"></div>
+      <div class="tcard-author">
+        <div class="tcard-avatar">Z</div>
+        <div><div class="tcard-name">Zeno Rocha</div><div class="tcard-role">Founder @ Resend</div></div>
+      </div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-logo">✦ mux</div>
+      <div class="tcard-quote">"The code quality is exceptional. It's like having a senior engineer who always knows exactly what you mean — without the meetings."</div>
+      <div class="tcard-divider"></div>
+      <div class="tcard-author">
+        <div class="tcard-avatar">D</div>
+        <div><div class="tcard-name">Dave Kiss</div><div class="tcard-role">Dev Advocate @ Mux</div></div>
+      </div>
+    </div>
+    <!-- duplicate for seamless loop -->
+    <div class="tcard">
+      <div class="tcard-logo">linear</div>
+      <div class="tcard-quote">"ClawEasy completely changed how our team ships features. Describing the vibe is enough — it figures out the rest. Incredible leverage."</div>
+      <div class="tcard-divider"></div>
+      <div class="tcard-author">
+        <div class="tcard-avatar">K</div>
+        <div><div class="tcard-name">Karri Saarinen</div><div class="tcard-role">CEO @ Linear</div></div>
+      </div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-logo">▲ vercel</div>
+      <div class="tcard-quote">"Thanks to ClawEasy, building and iterating on our platform became effortless. OpenClaw Claude understands our entire codebase and intent perfectly."</div>
+      <div class="tcard-divider"></div>
+      <div class="tcard-author">
+        <div class="tcard-avatar">G</div>
+        <div><div class="tcard-name">Guillermo Rauch</div><div class="tcard-role">CEO @ Vercel</div></div>
+      </div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-logo">resend</div>
+      <div class="tcard-quote">"We used ClawEasy to accelerate our TypeScript SDK. The vibe-first approach is a genuine paradigm shift for the way developers build."</div>
+      <div class="tcard-divider"></div>
+      <div class="tcard-author">
+        <div class="tcard-avatar">Z</div>
+        <div><div class="tcard-name">Zeno Rocha</div><div class="tcard-role">Founder @ Resend</div></div>
+      </div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-logo">✦ mux</div>
+      <div class="tcard-quote">"The code quality is exceptional. It's like having a senior engineer who always knows exactly what you mean — without the meetings."</div>
+      <div class="tcard-divider"></div>
+      <div class="tcard-author">
+        <div class="tcard-avatar">D</div>
+        <div><div class="tcard-name">Dave Kiss</div><div class="tcard-role">Dev Advocate @ Mux</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="stat-block">
+    <div class="stat-num"><span>50</span>k+</div>
+    <div class="stat-label">Developers using ClawEasy worldwide</div>
+    <div class="stat-sub">and growing fast</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-num"><span>10</span>×</div>
+    <div class="stat-label">Faster from idea to working code</div>
+    <div class="stat-sub">vs writing manually</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-num"><span>2M</span>+</div>
+    <div class="stat-label">Lines of production code generated</div>
+    <div class="stat-sub">this month alone</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-num"><span>99</span>%</div>
+    <div class="stat-label">Uptime SLA on all plans</div>
+    <div class="stat-sub">enterprise-grade reliability</div>
+  </div>
+</div>
+
+<!-- CONFIDENCE SECTION -->
+<div class="confidence">
+  <div class="confidence-left">
+    <h2>Code with<br>confidence.</h2>
+    <p>OpenClaw Claude doesn't just generate code — it understands your project architecture, your conventions, and your intent. Every output is contextually aware.</p>
+  </div>
+
+  <div class="confidence-center">         · · · · · · · · · · · · · · · · · · · · ·
+      · · ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ · · ·
+    · · ∨ A A A A A A A A A A A A A A ∨ · · ·
+   · ∨ A A V V V V V V V V V V V V A A ∨ · ·
+  · ∨ A V V V V V V V V V V V V V V A ∨ ·  ·
+  · A V V V V V V V V V V V V V V V V A · · ·
+  ∨ A V V V V V V V ∨ · ∨ V V V V V V A ∨  ·
+  A V V V V V V ∨ ·         · ∨ V V V V V A ·
+  A V V V V ∨ ·                 · ∨ V V V A ·
+  A V V ∨ ·                         · ∨ V A ·
+  A V ·                                 V A ·
+  A V ·                                 V A ·
+  A V ∨ ·                         · ∨ V A · ·
+  A V V ∨ ·                     · ∨ V V A ·  ·
+  A V V V V ∨ ·                 · ∨ V V V A · ·
+  A V V V V V V ∨ ·         · ∨ V V V V V A ·
+  ∨ A V V V V V V V ∨ · ∨ V V V V V V A ∨ ·
+  · A V V V V V V V V V V V V V V V V A · ·
+  · ∨ A V V V V V V V V V V V V V V A ∨ · ·
+   · ∨ A A V V V V V V V V V V A A ∨ · · ·
+    · · ∨ ∨ A A A A A A A A A ∨ ∨ · · · ·
+      · · · ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ ∨ · · · · ·
+          · · · · · · · · · · · · · · ·  </div>
+
+  <div class="confidence-right">
+    <h3>Ship what's next.</h3>
+    <div class="conf-btns">
+      <a href="https://claweasy.vercel.app/#" class="conf-btn primary">Start Vibing</a>
+      <a href="https://claweasy.vercel.app/#" class="conf-btn">Read Docs</a>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES DETAIL -->
+<div class="features-detail">
+  <div class="feature-row">
+    <div class="feature-content">
+      <div>
+        <div class="feature-label">Natural Language → Code</div>
+        <h3>Say what you mean.<br>Get what you want.</h3>
+        <p>ClawEasy understands intent, not just instructions. Tell it the vibe, the feeling, the outcome — and OpenClaw Claude translates that into precise, working code every single time.</p>
+        <p>No more fighting with prompts. No more context loss. Just describe and receive.</p>
+      </div>
+      <a href="https://claweasy.vercel.app/#" class="learn-more">Explore the editor →</a>
+    </div>
+    <div class="feature-visual">
+      <div class="feature-terminal">
+        <div><span class="ft-prompt">you › </span>dark dashboard, sales chart, date filter</div>
+        <br>
+        <div class="ft-dim">● analyzing project context...</div>
+        <div><span class="ft-ok">✓</span> component structure scaffolded</div>
+        <div><span class="ft-ok">✓</span> dark theme + responsive layout</div>
+        <div><span class="ft-ok">✓</span> date range picker integrated</div>
+        <div><span class="ft-ok">✓</span> recharts wired up</div>
+        <div><span class="ft-ok">✓</span> typescript types inferred</div>
+        <div><span class="ft-ok">✓</span> test file generated</div>
+        <br>
+        <div><span class="ft-ok">✦ done</span> <span class="ft-dim">— 94 lines · zero extra deps</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="feature-row">
+    <div class="feature-visual">
+      <div class="feature-code">
+        <div><span class="fc-comment">// Generated in context of your project</span></div>
+        <div><span class="fc-kw">import</span> { <span class="fc-var">useProjectStore</span> } <span class="fc-kw">from</span> <span class="fc-str">'@/store'</span></div>
+        <div><span class="fc-kw">import</span> { <span class="fc-var">Button</span>, <span class="fc-var">cn</span> } <span class="fc-kw">from</span> <span class="fc-str">'@/components/ui'</span></div>
+        <br>
+        <div><span class="fc-kw">interface</span> <span class="fc-var">VibePanelProps</span> {</div>
+        <div>&nbsp;&nbsp;<span class="fc-var">mode</span>?: <span class="fc-str">'fast'</span> | <span class="fc-str">'smooth'</span></div>
+        <div>}</div>
+        <br>
+        <div><span class="fc-kw">export function</span> <span class="fc-fn">VibePanel</span>({ <span class="fc-var">mode</span> = <span class="fc-str">'fast'</span> }: <span class="fc-var">VibePanelProps</span>) {</div>
+        <div>&nbsp;&nbsp;<span class="fc-kw">const</span> { <span class="fc-var">theme</span>, <span class="fc-var">dispatch</span> } = <span class="fc-fn">useProjectStore</span>()</div>
+        <br>
+        <div>&nbsp;&nbsp;<span class="fc-kw">return</span> (</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="fc-var">div</span> <span class="fc-kw">className</span>={<span class="fc-fn">cn</span>(<span class="fc-str">"panel"</span>, <span class="fc-var">theme</span>, <span class="fc-var">mode</span>)}&gt;</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="fc-var">Button</span> <span class="fc-kw">variant</span>=<span class="fc-str">"ghost"</span> /&gt;</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span class="fc-var">div</span>&gt;</div>
+        <div>&nbsp;&nbsp;)</div>
+        <div>}</div>
+      </div>
+    </div>
+    <div class="feature-content right-side">
+      <div>
+        <div class="feature-label">Full Project Context</div>
+        <h3>Knows your codebase<br>inside and out.</h3>
+        <p>Unlike other tools, ClawEasy understands your entire project — not just the open file. It references your patterns, naming conventions, and architectural decisions.</p>
+        <p>Import paths, component libraries, store patterns — all respected automatically.</p>
+      </div>
+      <a href="https://claweasy.vercel.app/#" class="learn-more">See how it works →</a>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div class="pricing-section">
+  <div class="section-header">
+    <p class="section-label">Pricing</p>
+    <h2>Start free.<br>Scale with confidence.</h2>
+  </div>
+  <div class="pricing-grid">
+    <div class="plan">
+      <div class="plan-name">Hobby</div>
+      <div class="plan-price"><sup>$</sup>0<span>/mo</span></div>
+      <div class="plan-desc">Everything you need to get started with vibe coding. No credit card required.</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li><span class="pf-check">✦</span> 100 generations / month</li>
+        <li><span class="pf-check">✦</span> All supported languages</li>
+        <li><span class="pf-check">✦</span> Vibe mode access</li>
+        <li><span class="pf-check">✦</span> Community support</li>
+      </ul>
+      <a href="https://claweasy.vercel.app/#" class="plan-btn">Get Started Free</a>
+    </div>
+    <div class="plan featured">
+      <div class="plan-badge">Most Popular</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price"><sup>$</sup>29<span>/mo</span></div>
+      <div class="plan-desc">For serious developers who ship daily. Full context window, unlimited iterations.</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li><span class="pf-check">✦</span> Unlimited generations</li>
+        <li><span class="pf-check">✦</span> Full project context</li>
+        <li><span class="pf-check">✦</span> Priority OpenClaw Claude</li>
+        <li><span class="pf-check">✦</span> Git integration</li>
+        <li><span class="pf-check">✦</span> Email support</li>
+      </ul>
+      <a href="https://claweasy.vercel.app/#" class="plan-btn">Start Pro Trial</a>
+    </div>
+    <div class="plan">
+      <div class="plan-name">Enterprise</div>
+      <div class="plan-price" style="font-size:36px;padding-top:8px">Custom</div>
+      <div class="plan-desc">For teams who need custom deployment, SSO, audit logs, and dedicated support.</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li><span class="pf-check">✦</span> Everything in Pro</li>
+        <li><span class="pf-check">✦</span> Custom Claude models</li>
+        <li><span class="pf-check">✦</span> On-prem deployment option</li>
+        <li><span class="pf-check">✦</span> SSO + SAML</li>
+        <li><span class="pf-check">✦</span> Dedicated engineer</li>
+      </ul>
+      <a href="https://claweasy.vercel.app/#" class="plan-btn">Book a Demo</a>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section">
+  <div class="section-header">
+    <p class="section-label">FAQ</p>
+    <h2>Common questions.</h2>
+  </div>
+  <div class="faq-grid">
+    <div class="faq-item">
+      <h4>What is vibe coding? <span class="faq-toggle">+</span></h4>
+      <p>Vibe coding is a development approach where you describe the feel, intent, and outcome of what you want to build rather than spelling out exact technical steps. ClawEasy's AI translates your "vibes" into working code.</p>
+    </div>
+    <div class="faq-item">
+      <h4>How does OpenClaw Claude differ? <span class="faq-toggle">+</span></h4>
+      <p>OpenClaw Claude is a specialized configuration of Claude optimized for code generation, project context awareness, and vibe-to-code translation. It understands codebases holistically, not just line-by-line.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Which languages are supported? <span class="faq-toggle">+</span></h4>
+      <p>ClawEasy supports all major programming languages and frameworks: TypeScript, JavaScript, Python, Go, Rust, Swift, Kotlin, React, Next.js, Vue, Svelte, and more. The list grows continuously.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Is my code kept private? <span class="faq-toggle">+</span></h4>
+      <p>Yes. Your code is never used to train models or shared with any third party. All project context is encrypted at rest and in transit. Enterprise plans offer on-premise deployment for maximum control.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Can I use it with my existing editor? <span class="faq-toggle">+</span></h4>
+      <p>ClawEasy integrates with VS Code, Cursor, JetBrains IDEs, and Neovim via plugins. You can also use the web interface or API for custom integrations.</p>
+    </div>
+    <div class="faq-item">
+      <h4>What's the refund policy? <span class="faq-toggle">+</span></h4>
+      <p>We offer a 14-day money-back guarantee on all paid plans, no questions asked. If ClawEasy isn't the right fit, we'll refund your payment in full.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CTA FINAL -->
+<div class="cta-final">
+  <h2>Start vibing today.</h2>
+  <p>Join 50,000+ developers who ship faster with ClawEasy and OpenClaw Claude. Free to start, no credit card required.</p>
+  <div class="cta-actions">
+    <a href="https://claweasy.vercel.app/#" class="btn-primary">Start for Free →</a>
+    <a href="https://claweasy.vercel.app/#" class="btn-secondary">Book a Demo</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer-main">
+  <div class="footer-brand">
+    <a href="https://claweasy.vercel.app/#" class="logo">
+      <div class="logo-mark">✦</div>
+      claweasy
+    </a>
+    <div class="footer-status">
+      <span class="status-dot"></span>
+      All Systems Normal
+    </div>
+    <a href="https://x.com/ClawEasyAgent" target="_blank" class="footer-x-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+      Follow on X
+    </a>
+  </div>
+  <div class="footer-col">
+    <h4>Product</h4>
+    <ul>
+      <li><a href="https://claweasy.vercel.app/#">Code Generation</a></li>
+      <li><a href="https://claweasy.vercel.app/#">Vibe Mode</a></li>
+      <li><a href="https://claweasy.vercel.app/#">Project Context</a></li>
+      <li><a href="https://claweasy.vercel.app/#">Workflows</a></li>
+      <li><a href="https://claweasy.vercel.app/#">Integrations</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Resources</h4>
+    <ul>
+      <li><a href="https://claweasy.vercel.app/#">Documentation</a></li>
+      <li><a href="https://claweasy.vercel.app/#">API Reference <span class="ext">↗</span></a></li>
+      <li><a href="https://claweasy.vercel.app/#">Changelog</a></li>
+      <li><a href="https://claweasy.vercel.app/#">Roadmap <span class="ext">↗</span></a></li>
+      <li><a href="https://claweasy.vercel.app/#">Our Blog</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Company</h4>
+    <ul>
+      <li><a href="https://claweasy.vercel.app/#">Customers</a></li>
+      <li><a href="https://claweasy.vercel.app/#">Contact Us</a></li>
+      <li><a href="https://claweasy.vercel.app/#">Book a Demo</a></li>
+      <li><a href="https://claweasy.vercel.app/#">We Are Hiring</a></li>
+      <li><a href="https://claweasy.vercel.app/#">Trust Center <span class="ext">↗</span></a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Legal</h4>
+    <ul>
+      <li><a href="https://claweasy.vercel.app/#">Terms of Service</a></li>
+      <li><a href="https://claweasy.vercel.app/#">Privacy Policy</a></li>
+      <li><a href="https://claweasy.vercel.app/#">Security</a></li>
+      <li><a href="https://claweasy.vercel.app/#">Cookie Policy</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer-bottom">
+  <span>Copyright © 2025.</span>
+  <a href="https://x.com/ClawEasyAgent" target="_blank" style="display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--text2);font-family:var(--font-mono);text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color=&#39;var(--accent-light)&#39;" onmouseout="this.style.color=&#39;var(--text2)&#39;">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+    @ClawEasyAgent
+  </a>
+  <span>ClawEasy. All rights reserved.</span>
+</div>
+
+<div class="footer-wordmark">
+  <div class="footer-wordmark-text">Vibe.Code.Ship.</div>
+</div>
+<!-- FLOATING X BADGE -->
+<a href="https://x.com/ClawEasyAgent" target="_blank" class="x-float">
+  <span class="x-float-dot"></span>
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+  Follow us on X
+</a>
+
+<!-- ═══════════════════════════════════════════════════════
+     INTERACTIVE LAYER — modals, FAQ accordion, mobile nav
+═══════════════════════════════════════════════════════ -->
+<style>
+/* ── MODAL ── */
+#modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.82);
+  backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+#modal-overlay.active { opacity: 1; pointer-events: all; }
+
+#modal-box {
+  background: #0c0202;
+  border: 1px solid rgba(180,30,30,0.28);
+  border-radius: 14px;
+  padding: 48px 44px 40px;
+  width: 100%; max-width: 460px;
+  position: relative;
+  transform: translateY(18px);
+  transition: transform 0.25s;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+#modal-overlay.active #modal-box { transform: translateY(0); }
+
+#modal-close {
+  position: absolute; top: 16px; right: 18px;
+  background: none; border: none;
+  color: var(--text2); font-size: 22px;
+  cursor: pointer; line-height: 1; padding: 4px 8px;
+  transition: color 0.15s; border-radius: 4px;
+}
+#modal-close:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+
+.modal-title {
+  font-family: var(--font-serif);
+  font-size: 34px; font-weight: 400;
+  margin-bottom: 8px; color: var(--text);
+}
+.modal-subtitle {
+  font-size: 14px; color: var(--text2);
+  line-height: 1.65; margin-bottom: 28px;
+}
+.modal-form { display: flex; flex-direction: column; gap: 11px; }
+.modal-input {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.11);
+  border-radius: 8px; padding: 11px 16px;
+  font-size: 14px; color: var(--text);
+  font-family: var(--font-sans); width: 100%;
+  transition: border-color 0.15s; outline: none;
+}
+.modal-input::placeholder { color: var(--muted); }
+.modal-input:focus { border-color: var(--accent2); }
+.modal-submit {
+  margin-top: 6px; padding: 13px;
+  background: var(--accent2); border: 1px solid var(--accent2);
+  border-radius: 8px; color: #fff;
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer; transition: background 0.2s, border-color 0.2s;
+  width: 100%;
+}
+.modal-submit:hover { background: var(--accent3); border-color: var(--accent3); }
+.modal-note {
+  font-size: 12px; color: var(--muted);
+  text-align: center; margin-top: 14px;
+  font-family: var(--font-mono); line-height: 1.5;
+}
+.modal-link { color: var(--accent-light); cursor: pointer; }
+.modal-link:hover { text-decoration: underline; }
+
+.modal-success { text-align: center; padding: 16px 0; }
+.modal-success-icon {
+  font-size: 44px; margin-bottom: 16px;
+  color: var(--accent3);
+}
+.modal-success h3 {
+  font-family: var(--font-serif);
+  font-size: 30px; font-weight: 400; margin-bottom: 10px;
+}
+.modal-success p { color: var(--text2); font-size: 14px; line-height: 1.65; }
+
+.docs-item {
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 8px; cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  margin-bottom: 8px;
+}
+.docs-item:hover { border-color: var(--accent2); background: var(--red-dim); }
+.docs-item-title { font-size: 14px; color: var(--text); margin-bottom: 3px; }
+.docs-item-desc { font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: 112px; left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  background: rgba(14,3,3,0.97);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 11px 22px;
+  font-size: 13px; color: var(--text);
+  font-family: var(--font-mono);
+  z-index: 1001; opacity: 0;
+  transition: opacity 0.22s, transform 0.22s;
+  pointer-events: none; white-space: nowrap;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── MOBILE NAV ── */
+#mobile-menu-btn {
+  display: none;
+  background: none;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 17px; line-height: 1;
+  transition: border-color 0.15s;
+}
+#mobile-menu-btn:hover { border-color: var(--accent-light); }
+
+#mobile-nav {
+  display: none;
+  position: fixed;
+  top: 52px; left: 0; right: 0;
+  background: rgba(5,1,1,0.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 199;
+  padding: 12px 16px 20px;
+  flex-direction: column; gap: 3px;
+}
+#mobile-nav.open { display: flex; }
+#mobile-nav a {
+  display: block; padding: 10px 14px;
+  color: var(--text2); text-decoration: none;
+  font-size: 14px; border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+#mobile-nav a:hover { background: var(--red-dim); color: var(--text); }
+#mobile-nav .mn-divider {
+  height: 1px; background: var(--border);
+  margin: 8px 0;
+}
+#mobile-nav .mn-primary {
+  margin-top: 4px;
+  background: var(--accent2);
+  color: #fff !important;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+}
+#mobile-nav .mn-primary:hover { background: var(--accent3) !important; }
+
+/* ── FAQ ACCORDION ── */
+.faq-answer {
+  overflow: hidden;
+  max-height: 0; opacity: 0;
+  transition: max-height 0.38s ease, opacity 0.3s ease, padding 0.3s ease;
+  padding-top: 0;
+}
+.faq-answer.open {
+  max-height: 200px; opacity: 1;
+  padding-top: 2px;
+}
+.faq-item h4 { user-select: none; }
+.faq-toggle { transition: transform 0.25s; display: inline-block; }
+.faq-toggle.open { transform: rotate(45deg); }
+
+/* Active nav item */
+.nav-center a.active { color: var(--text); }
+
+@media (max-width: 960px) {
+  #mobile-menu-btn { display: block; }
+}
+</style>
+
+<!-- MODAL HTML -->
+<div id="modal-overlay">
+  <div id="modal-box">
+    <button id="modal-close" aria-label="Close">×</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" role="status"></div>
+
+<!-- MOBILE NAV -->
+<div id="mobile-nav" role="navigation">
+  <a href="#" data-action="scroll" data-target="product-grid">Products</a>
+  <a href="#" data-action="scroll" data-target="testimonials">Customers</a>
+  <a href="#" data-action="modal" data-target="docs">Docs</a>
+  <a href="#" data-action="scroll" data-target="pricing-section">Pricing</a>
+  <div class="mn-divider"></div>
+  <a href="#" data-action="modal" data-target="login">Log in</a>
+  <a href="#" data-action="modal" data-target="demo" class="mn-primary">Book a Demo</a>
+</div>
+
+<script>
+(function () {
+'use strict';
+
+// ── MODAL ────────────────────────────────────────────────────────────────
+const overlay = document.getElementById('modal-overlay');
+const modalContent = document.getElementById('modal-content');
+const modalCloseBtn = document.getElementById('modal-close');
+
+function openModal(type, plan) {
+  let html = '';
+
+  if (type === 'signup') {
+    const isPro = plan === 'pro';
+    const note = isPro
+      ? 'Starting your <strong style="color:var(--accent-light)">Pro Trial</strong> — $29/mo after 14 days. Cancel anytime.'
+      : 'Free forever. No credit card required.';
+    html = `
+      <div class="modal-title">Start vibing.</div>
+      <div class="modal-subtitle">${note}</div>
+      <form class="modal-form" id="signup-form">
+        <input class="modal-input" type="text" placeholder="Your name" required>
+        <input class="modal-input" type="email" placeholder="Work email" required>
+        ${isPro ? '<input class="modal-input" type="text" placeholder="Company (optional)">' : ''}
+        <button class="modal-submit" type="submit">Create Account →</button>
+      </form>
+      <p class="modal-note">
+        Already have an account? <span class="modal-link" onclick="openModal('login')">Log in ›</span><br>
+        By signing up you agree to our Terms &amp; Privacy Policy.
+      </p>`;
+  } else if (type === 'login') {
+    html = `
+      <div class="modal-title">Welcome back.</div>
+      <div class="modal-subtitle">Sign in to your ClawEasy account.</div>
+      <form class="modal-form" id="login-form">
+        <input class="modal-input" type="email" placeholder="Email" required>
+        <input class="modal-input" type="password" placeholder="Password" required>
+        <button class="modal-submit" type="submit">Log In →</button>
+      </form>
+      <p class="modal-note">
+        <span class="modal-link" onclick="showToast('Password reset email sent ✓')">Forgot password?</span><br>
+        No account? <span class="modal-link" onclick="openModal('signup')">Sign up free ›</span>
+      </p>`;
+  } else if (type === 'demo') {
+    html = `
+      <div class="modal-title">Book a demo.</div>
+      <div class="modal-subtitle">See ClawEasy in action — tailored to your team's workflow and stack.</div>
+      <form class="modal-form" id="demo-form">
+        <input class="modal-input" type="text" placeholder="Your name" required>
+        <input class="modal-input" type="email" placeholder="Work email" required>
+        <input class="modal-input" type="text" placeholder="Company" required>
+        <input class="modal-input" type="text" placeholder="Team size (e.g. 10–50)">
+        <button class="modal-submit" type="submit">Request Demo →</button>
+      </form>
+      <p class="modal-note">We'll reach out within 1 business day.</p>`;
+  } else if (type === 'docs') {
+    const sections = [
+      ['Getting Started', 'Install and configure in 5 minutes'],
+      ['API Reference ↗', 'Full REST API and SDK documentation'],
+      ['Vibe Mode Guide', 'How to describe intent effectively'],
+      ['Integrations', 'VS Code, Cursor, JetBrains, Neovim'],
+      ['Changelog', "What's new in every release"],
+    ];
+    html = `
+      <div class="modal-title">Documentation.</div>
+      <div class="modal-subtitle">Quick access to guides and references.</div>
+      ${sections.map(([t, d]) => `
+        <div class="docs-item" onclick="showToast('Opening ${t}...'); closeModal()">
+          <div class="docs-item-title">${t}</div>
+          <div class="docs-item-desc">${d}</div>
+        </div>`).join('')}
+      <button class="modal-submit" style="margin-top:8px" onclick="closeModal()">Close</button>`;
+  }
+
+  modalContent.innerHTML = html;
+
+  // Attach form handlers after inserting HTML
+  const sf = document.getElementById('signup-form');
+  const lf = document.getElementById('login-form');
+  const df = document.getElementById('demo-form');
+  if (sf) sf.addEventListener('submit', function(e) { e.preventDefault(); showSuccess("You're in.", "Check your email for a confirmation link. Welcome to ClawEasy."); });
+  if (lf) lf.addEventListener('submit', function(e) { e.preventDefault(); showSuccess("Logged in.", "Redirecting to your workspace..."); setTimeout(closeModal, 2000); });
+  if (df) df.addEventListener('submit', function(e) { e.preventDefault(); showSuccess("Demo booked.", "We'll reach out within 1 business day to schedule your personalized demo."); });
+
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function showSuccess(title, msg) {
+  modalContent.innerHTML = `
+    <div class="modal-success">
+      <div class="modal-success-icon">✦</div>
+      <h3>${title}</h3>
+      <p>${msg}</p>
+      <button class="modal-submit" style="margin-top:24px" onclick="closeModal()">Done</button>
+    </div>`;
+}
+
+overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(); });
+modalCloseBtn.addEventListener('click', closeModal);
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+// Expose globally for inline onclick usage
+window.openModal = openModal;
+window.closeModal = closeModal;
+
+// ── TOAST ────────────────────────────────────────────────────────────────
+const toastEl = document.getElementById('toast');
+let toastTimer;
+function showToast(msg) {
+  clearTimeout(toastTimer);
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  toastTimer = setTimeout(function() { toastEl.classList.remove('show'); }, 3000);
+}
+window.showToast = showToast;
+
+// ── SMOOTH SCROLL ────────────────────────────────────────────────────────
+function scrollToSection(cls) {
+  const el = document.querySelector('.' + cls) || document.getElementById(cls);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── FAQ ACCORDION ────────────────────────────────────────────────────────
+document.querySelectorAll('.faq-item').forEach(function(item) {
+  const h4 = item.querySelector('h4');
+  const p = item.querySelector('p');
+  const toggle = item.querySelector('.faq-toggle');
+  if (!h4 || !p || !toggle) return;
+
+  // Wrap answer paragraph in animated container
+  const wrapper = document.createElement('div');
+  wrapper.className = 'faq-answer';
+  p.parentNode.insertBefore(wrapper, p);
+  wrapper.appendChild(p);
+
+  h4.addEventListener('click', function() {
+    const isOpen = wrapper.classList.contains('open');
+    // Close all others
+    document.querySelectorAll('.faq-answer.open').forEach(function(w) {
+      w.classList.remove('open');
+      const t = w.closest('.faq-item').querySelector('.faq-toggle');
+      if (t) { t.textContent = '+'; t.classList.remove('open'); }
+    });
+    if (!isOpen) {
+      wrapper.classList.add('open');
+      toggle.textContent = '+';
+      toggle.classList.add('open');
+    }
+  });
+});
+
+// ── LINK HANDLER ─────────────────────────────────────────────────────────
+function handleInternalLink(e, el) {
+  const href = el.getAttribute('href') || '';
+  // Let real external links through
+  if (href.includes('x.com') || href.includes('twitter.com')) return;
+
+  e.preventDefault();
+  const text = (el.textContent || '').trim();
+  const cls = el.className || '';
+
+  // --- Navigation scrolls ---
+  if (cls.includes('logo')) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+
+  // --- Modals ---
+  if (text === 'Log in') { openModal('login'); return; }
+  if (text.includes('Book a Demo')) { openModal('demo'); return; }
+  if (text.includes('Start Vibing') || text.includes('Start for Free') ||
+      cls.includes('btn-primary')) { openModal('signup'); return; }
+  if (text.includes('Get Started Free')) { openModal('signup', 'hobby'); return; }
+  if (text.includes('Start Pro Trial')) { openModal('signup', 'pro'); return; }
+  if (text.includes('Read the Docs') || text.includes('Read Docs')) { openModal('docs'); return; }
+  if (text.includes('Explore the editor') || text.includes('See how it works')) {
+    scrollToSection('features-detail'); return;
+  }
+  if (cls.includes('conf-btn') && cls.includes('primary')) { openModal('signup'); return; }
+  if (cls.includes('conf-btn')) { openModal('docs'); return; }
+
+  // --- Learn more → scroll to features ---
+  if (cls.includes('learn-more')) { scrollToSection('features-detail'); return; }
+
+  // --- Footer product/resource links → toast ---
+  const toastLabels = ['Code Generation','Vibe Mode','Project Context','Workflows','Integrations',
+    'Documentation','API Reference','Changelog','Roadmap','Our Blog',
+    'Customers','Contact Us','We Are Hiring','Trust Center',
+    'Terms of Service','Privacy Policy','Security','Cookie Policy'];
+  for (var i = 0; i < toastLabels.length; i++) {
+    if (text.includes(toastLabels[i])) {
+      showToast(toastLabels[i] + ' — Coming Soon'); return;
+    }
+  }
+
+  // Default
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.querySelectorAll('a').forEach(function(a) {
+  const href = a.getAttribute('href') || '';
+  if (href.includes('x.com') || href.includes('twitter.com')) return;
+  a.addEventListener('click', function(e) { handleInternalLink(e, a); });
+});
+
+// ── NAV CENTER LINKS ─────────────────────────────────────────────────────
+document.querySelectorAll('.nav-center a').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    e.preventDefault(); e.stopPropagation();
+    const text = a.textContent.trim();
+    if (text.includes('Pricing')) scrollToSection('pricing-section');
+    else if (text.includes('Customers')) scrollToSection('testimonials');
+    else if (text.includes('Products')) scrollToSection('product-grid');
+    else if (text.includes('Docs')) openModal('docs');
+    else if (text.includes('Company')) scrollToSection('footer-main');
+    // highlight active
+    document.querySelectorAll('.nav-center a').forEach(function(x) { x.classList.remove('active'); });
+    a.classList.add('active');
+  });
+});
+
+// ── ACTIVE NAV ON SCROLL ─────────────────────────────────────────────────
+var sections = [
+  { cls: 'product-grid', text: 'Products' },
+  { cls: 'testimonials', text: 'Customers' },
+  { cls: 'pricing-section', text: 'Pricing' },
+];
+window.addEventListener('scroll', function() {
+  var scrollY = window.scrollY + 80;
+  sections.forEach(function(s) {
+    var el = document.querySelector('.' + s.cls);
+    if (!el) return;
+    var top = el.offsetTop;
+    var bottom = top + el.offsetHeight;
+    var link = document.querySelector('.nav-center a');
+    document.querySelectorAll('.nav-center a').forEach(function(a) {
+      if (a.textContent.trim().includes(s.text)) {
+        if (scrollY >= top && scrollY < bottom) a.classList.add('active');
+        else a.classList.remove('active');
+      }
+    });
+  });
+  // Nav background
+  var nav = document.querySelector('nav');
+  if (nav) nav.style.background = window.scrollY > 10
+    ? 'rgba(3,0,0,0.97)' : 'rgba(3,0,0,0.88)';
+});
+
+// ── MOBILE MENU ──────────────────────────────────────────────────────────
+var navRight = document.querySelector('.nav-right');
+var mobileNav = document.getElementById('mobile-nav');
+
+if (navRight) {
+  var mBtn = document.createElement('button');
+  mBtn.id = 'mobile-menu-btn';
+  mBtn.setAttribute('aria-label', 'Menu');
+  mBtn.innerHTML = '&#9776;';
+  navRight.insertBefore(mBtn, navRight.firstChild);
+
+  mBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var isOpen = mobileNav.classList.toggle('open');
+    mBtn.innerHTML = isOpen ? '&times;' : '&#9776;';
+  });
+
+  document.addEventListener('click', function(e) {
+    if (mobileNav.classList.contains('open') &&
+        !mobileNav.contains(e.target) && !mBtn.contains(e.target)) {
+      mobileNav.classList.remove('open');
+      mBtn.innerHTML = '&#9776;';
+    }
+  });
+}
+
+document.querySelectorAll('#mobile-nav a').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    e.preventDefault();
+    mobileNav.classList.remove('open');
+    var mBtn = document.getElementById('mobile-menu-btn');
+    if (mBtn) mBtn.innerHTML = '&#9776;';
+    var action = a.dataset.action;
+    var target = a.dataset.target;
+    if (action === 'scroll') scrollToSection(target);
+    else if (action === 'modal') openModal(target);
+  });
+});
+
+})();
+</script>
+
+
+
+</body></html>
