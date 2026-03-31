@@ -1,1 +1,15 @@
-.vercel
+# OS
+.DS_Store
+
+# Vercel local link metadata
+.vercel/
+
+# IDE/editor
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Node (if added later)
+node_modules/
